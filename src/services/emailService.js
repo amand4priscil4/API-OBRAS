@@ -2,14 +2,14 @@ const nodemailer = require('nodemailer');
 
 // Configurar transportador de email
 const createTransporter = () => {
-  return nodemailer.createTransporter({
+  return nodemailer.createTransport({
     host: process.env.EMAIL_HOST,
     port: process.env.EMAIL_PORT,
-    secure: false,
+    secure: false, // true para 465, false para outras portas
     auth: {
       user: process.env.EMAIL_USER,
-      pass: process.env.EMAIL_PASS
-    }
+      pass: process.env.EMAIL_PASS,
+    },
   });
 };
 
@@ -93,13 +93,14 @@ const enviarDetalhesObra = async (obra, emailDestino) => {
 
     // Enviar email
     const info = await transporter.sendMail(mailOptions);
-
+    
     console.log('Email enviado:', info.messageId);
     return {
       success: true,
       messageId: info.messageId,
       message: 'Email enviado com sucesso'
     };
+
   } catch (error) {
     console.error('Erro ao enviar email:', error);
     return {
